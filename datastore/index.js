@@ -2,15 +2,34 @@ const fs = require('fs');
 const path = require('path');
 const _ = require('underscore');
 const counter = require('./counter');
+const express = require('express');
+const app = express();
 
-var items = {};
+// var items = {};
 
 // Public API - Fix these CRUD functions ///////////////////////////////////////
 
 exports.create = (text, callback) => {
-  var id = counter.getNextUniqueId();
-  items[id] = text;
-  callback(null, { id, text });
+  app.post('/data', (req, res, next) => {
+    var id = counter.getNextUniqueId();
+    fs.writeFile(`${id}.txt`, text, (err) => {
+      if(err) {
+        throw err;
+      } else {
+        res.send('File Written!');
+        callback(null, { id, text });
+      }
+    });
+    next();
+  })
+  /*
+    On a post request
+      get next unique ID
+      create a new file with uniqueID as file name using the fs module, containing only the todo text
+      save to the data directory path
+  */
+  // var id = counter.getNextUniqueId();
+  // items[id] = text;
 };
 
 exports.readAll = (callback) => {
