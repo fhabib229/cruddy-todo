@@ -3,6 +3,7 @@ const path = require('path');
 const sprintf = require('sprintf-js').sprintf;
 
 var counter = 25;
+//global.items = [];
 
 // Private helper functions ////////////////////////////////////////////////////
 
@@ -40,9 +41,9 @@ const writeCounter = (count, callback) => {
 
 exports.getNextUniqueId = (callback) => {
   readCounter((err, fileData) => {
-    writeCounter(fileData+1, callback)
-  })
-
+    //items.push(fileData);
+    writeCounter(fileData+1, callback);
+  });
 // read current counter first
 //   pass in read counter function and invoke it
 // invoke write counter to write new counter

@@ -4,6 +4,7 @@ const _ = require('underscore');
 const counter = require('./counter');
 const express = require('express');
 const app = express();
+const url = require('url');
 
 
 // var items = {};
@@ -19,7 +20,6 @@ exports.create = (text, callback) => {
         throw err;
       } else {
         // res.send('File Written!');
-        console.log('file written!');
         callback(null, { id, text });
       }
     });
@@ -38,11 +38,37 @@ exports.create = (text, callback) => {
 };
 
 exports.readAll = (callback) => {
-  var data = [];
-  _.each(items, (text, id) => {
-    data.push({ id, text });
+  // var data = [];
+  // _.each(items, (text, id) => {
+  //   data.push({ id, text });
+  // });
+  // callback(null, data);
+  /*
+  create empty array
+  readDir passing in exports.dataDir, err, list of items
+    if err throws error
+    else return data.map returning an object containing id and text
+  */
+ var data = [];
+  fs.readdir(exports.dataDir, (err, items) => {
+    if (err) {
+      throw err;
+    } else {
+    // console.log('Data',items);
+      //var test = items.map(item => {
+      // console.log('item here',item,'type of', typeof item);
+      //   return {
+      //     id: items.slice(0,5),
+      //     text: items.slice(0,5)
+      //   };
+      // });
+      console.log('items', items)
+      items.forEach(item => {
+        data.push({id: item.slice(0, 5), text: (item.slice(0, 5))});
+      });
+      callback(null, data);
+    }
   });
-  callback(null, data);
 };
 
 exports.readOne = (id, callback) => {
