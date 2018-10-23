@@ -5,23 +5,28 @@ const counter = require('./counter');
 const express = require('express');
 const app = express();
 
+
 // var items = {};
 
 // Public API - Fix these CRUD functions ///////////////////////////////////////
 
 exports.create = (text, callback) => {
-  app.post('/data', (req, res, next) => {
-    var id = counter.getNextUniqueId();
-    fs.writeFile(`${id}.txt`, text, (err) => {
+  //app.post('./data', (req, res, next) => {
+    counter.getNextUniqueId((err, id) => {
+      var newPath = path.join(exports.dataDir, id + '.txt');
+      fs.writeFile(newPath, text, (err) => {
       if(err) {
         throw err;
       } else {
-        res.send('File Written!');
+        // res.send('File Written!');
+        console.log('file written!');
         callback(null, { id, text });
       }
     });
-    next();
-  })
+    });
+
+    //next();
+  //});
   /*
     On a post request
       get next unique ID
