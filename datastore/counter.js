@@ -41,7 +41,6 @@ const writeCounter = (count, callback) => {
 
 exports.getNextUniqueId = (callback) => {
   readCounter((err, fileData) => {
-    //items.push(fileData);
     writeCounter(fileData+1, callback);
   });
 // read current counter first
