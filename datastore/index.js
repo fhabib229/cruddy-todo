@@ -52,6 +52,15 @@ exports.readAll = (callback) => {
   });
 };
 
+/*
+promisify all on fs
+return promise and chain a .then onto it
+  pass in text into callback
+  return new object with id as one property
+  for text property pass in text from callback parameter
+    add .toString() to text
+*/
+
 exports.readOne = (id, callback) => {
 var filePath = path.join(exports.dataDir, id + '.txt');
 fs.readFile(filePath, (err, item) => {
@@ -76,9 +85,9 @@ exports.update = (id, text, callback) => {
         } else {
           callback(null, { id, text});
         }
-      })
+      });
     }
-  })
+  });
 
 };
 
