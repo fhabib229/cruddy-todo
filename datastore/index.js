@@ -65,19 +65,6 @@ fs.readFile(filePath, (err, item) => {
 };
 
 exports.update = (id, text, callback) => {
-  // var item = items[id];
-  // if (!item) {
-  //   callback(new Error(`No item with id: ${id}`));
-  // } else {
-  //   items[id] = text;
-  //   callback(null, { id, text });
-  // }
-/*
-create another path
-invoke read file
-  write file and pass in path, text, error
-*/
-
   var filePath = path.join(exports.dataDir, id + '.txt');
   fs.readFile(filePath, (err) => {
     if (err) {
@@ -96,14 +83,23 @@ invoke read file
 };
 
 exports.delete = (id, callback) => {
-  var item = items[id];
-  delete items[id];
-  if (!item) {
-    // report an error if item not found
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    callback();
-  }
+  // var item = items[id];
+  // delete items[id];
+  // if (!item) {
+  //   // report an error if item not found
+  //   callback(new Error(`No item with id: ${id}`));
+  // } else {
+  //   callback();
+  // }
+  var filePath = path.join(exports.dataDir, id + '.txt');
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      callback(new Error(`No item with id: ${id}`));
+    } else {
+      callback();
+      console.log('File deleted!');
+    }
+  });
 };
 
 // Config+Initialization code -- DO NOT MODIFY /////////////////////////////////
