@@ -79,7 +79,7 @@ invoke read file
 */
 
   var filePath = path.join(exports.dataDir, id + '.txt');
-  fs.readFile(filePath, (err, text) => {
+  fs.readFile(filePath, (err) => {
     if (err) {
       callback(new Error(`No item with id: ${id}`));
     } else {
