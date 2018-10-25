@@ -5,6 +5,8 @@ const counter = require('./counter');
 const express = require('express');
 const app = express();
 const url = require('url');
+const Promise = require('bluebird');
+const promRead = Promise.promisify(fs.readFile);
 
 
 // var items = {};
@@ -38,28 +40,24 @@ exports.create = (text, callback) => {
 };
 
 exports.readAll = (callback) => {
-
- var data = [];
   fs.readdir(exports.dataDir, (err, items) => {
     if (err) {
       throw err;
     } else {
-      items.forEach(item => {
-        data.push({id: item.slice(0, 5), text: (item.slice(0, 5))});
+      var data = items.map(item => {
+        var newPath = path.join(exports.dataDir, item);
+        return promRead(newPath).then(
+          (todo) => {
+            return {id: item.slice(0, 5), text: todo.toString() };
+          });
+        });
+      Promise.all(data).then(todos => {
+        callback(null, todos);
       });
-      callback(null, data);
     }
   });
 };
 
-/*
-promisify all on fs
-return promise and chain a .then onto it
-  pass in text into callback
-  return new object with id as one property
-  for text property pass in text from callback parameter
-    add .toString() to text
-*/
 
 exports.readOne = (id, callback) => {
 var filePath = path.join(exports.dataDir, id + '.txt');
