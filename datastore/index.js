@@ -1,19 +1,19 @@
 const fs = require('fs');
 const path = require('path');
 const _ = require('underscore');
-const counter = require('./counter');
 const express = require('express');
 const app = express();
 const url = require('url');
 const Promise = require('bluebird');
 const promRead = Promise.promisify(fs.readFile);
+const counter = Promise.promisifyAll(require('./counter'));
 
 
 // var items = {};
 
 // Public API - Fix these CRUD functions ///////////////////////////////////////
 
-exports.create = (text, callback) => {
+var create = (text, callback) => {
   //app.post('./data', (req, res, next) => {
     counter.getNextUniqueId((err, id) => {
       var newPath = path.join(exports.dataDir, id + '.txt');
@@ -26,18 +26,9 @@ exports.create = (text, callback) => {
       }
     });
     });
-
-    //next();
-  //});
-  /*
-    On a post request
-      get next unique ID
-      create a new file with uniqueID as file name using the fs module, containing only the todo text
-      save to the data directory path
-  */
-  // var id = counter.getNextUniqueId();
-  // items[id] = text;
 };
+
+exports.createAsync = Promise.promisify(create);
 
 exports.readAll = (callback) => {
   fs.readdir(exports.dataDir, (err, items) => {
@@ -59,7 +50,7 @@ exports.readAll = (callback) => {
 };
 
 
-exports.readOne = (id, callback) => {
+var readOne = (id, callback) => {
 var filePath = path.join(exports.dataDir, id + '.txt');
 fs.readFile(filePath, (err, item) => {
   if (err) {
@@ -71,7 +62,9 @@ fs.readFile(filePath, (err, item) => {
 })
 };
 
-exports.update = (id, text, callback) => {
+exports.readOneAsync = Promise.promisify(readOne);
+
+var update = (id, text, callback) => {
   var filePath = path.join(exports.dataDir, id + '.txt');
   fs.readFile(filePath, (err) => {
     if (err) {
@@ -89,7 +82,9 @@ exports.update = (id, text, callback) => {
 
 };
 
-exports.delete = (id, callback) => {
+exports.updateAsync = Promise.promisify(update);
+
+var deleteToDo = (id, callback) => {
   // var item = items[id];
   // delete items[id];
   // if (!item) {
@@ -108,6 +103,8 @@ exports.delete = (id, callback) => {
     }
   });
 };
+
+exports.deleteToDoAsync = Promise.promisify(deleteToDo);
 
 // Config+Initialization code -- DO NOT MODIFY /////////////////////////////////
 

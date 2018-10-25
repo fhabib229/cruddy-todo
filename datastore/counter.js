@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const sprintf = require('sprintf-js').sprintf;
-
+const Promise = require('bluebird');
 var counter = 25;
 //global.items = [];
 
